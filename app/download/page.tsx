@@ -62,7 +62,13 @@ export default function DownloadPage() {
       console.log(`✅ APK downloaded successfully`);
     } catch (err: any) {
       console.error('Error downloading APK:', err);
-      const errorMessage = err.response?.data?.message || err.message || 'Error al descargar el APK';
+      let errorMessage = err.response?.data?.message || err.message || 'Error al descargar el APK';
+      
+      // Si el error indica que se requiere re-subir el APK
+      if (err.response?.data?.requiresReupload) {
+        errorMessage = 'El archivo APK no está disponible. Por favor, contacta al administrador para que vuelva a subir el APK.';
+      }
+      
       console.error('Error details:', {
         status: err.response?.status,
         statusText: err.response?.statusText,
