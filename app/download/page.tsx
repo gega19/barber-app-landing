@@ -36,6 +36,16 @@ export default function DownloadPage() {
       setDownloading(true);
       setError(null);
 
+      console.log(`📥 Attempting to download APK for version: ${version.id} (${version.version})`);
+
+      // Si la URL es externa (Cloudinary), redirigir directamente
+      if (version.apkUrl && !version.apkUrl.startsWith('/uploads/')) {
+        console.log(`🔗 Redirecting to external URL: ${version.apkUrl}`);
+        window.location.href = version.apkUrl;
+        setDownloading(false);
+        return;
+      }
+
       // Obtener el APK como blob
       const blob = await appApi.downloadApk(version.id);
 
@@ -43,16 +53,23 @@ export default function DownloadPage() {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `bartop-${version.version}.apk`;
+      link.download = `barber-app-v${version.version}.apk`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
 
-      // Registrar la descarga en el backend (opcional, pero el backend ya lo hace automáticamente)
+      console.log(`✅ APK downloaded successfully`);
     } catch (err: any) {
       console.error('Error downloading APK:', err);
-      setError(err.response?.data?.message || 'Error al descargar el APK');
+      const errorMessage = err.response?.data?.message || err.message || 'Error al descargar el APK';
+      console.error('Error details:', {
+        status: err.response?.status,
+        statusText: err.response?.statusText,
+        data: err.response?.data,
+        message: errorMessage,
+      });
+      setError(errorMessage);
     } finally {
       setDownloading(false);
     }
