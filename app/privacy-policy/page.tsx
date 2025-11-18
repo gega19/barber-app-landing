@@ -25,9 +25,10 @@ export default function PrivacyPolicyPage() {
     try {
       setIsLoading(true);
       setError(null);
-      const response = await appApi.get('/legal/privacy');
+      const response = await appApi.get('/api/legal/privacy');
       setDocument(response.data.data);
     } catch (err: any) {
+      console.error('Error loading privacy policy:', err);
       setError(err.response?.data?.message || 'Error al cargar el documento');
     } finally {
       setIsLoading(false);
