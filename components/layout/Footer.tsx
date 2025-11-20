@@ -55,6 +55,11 @@ export default function Footer() {
                   Términos de Servicio
                 </Link>
               </li>
+              <li>
+                <Link href="/delete-account" className="text-text-secondary hover:text-primary-gold transition-colors">
+                  Eliminar Cuenta
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
