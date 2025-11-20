@@ -29,12 +29,6 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6">
-            <a href="#features" className="text-text-primary hover:text-primary-gold transition-colors">
-              Características
-            </a>
-            <a href="#screenshots" className="text-text-primary hover:text-primary-gold transition-colors">
-              Galería
-            </a>
             <Link href="/download" className="text-text-primary hover:text-primary-gold transition-colors">
               Descargar
             </Link>
@@ -70,20 +64,6 @@ export default function Header() {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className="md:hidden mt-4 pb-4 space-y-3 border-t-2 border-border-gold pt-4">
-            <a
-              href="#features"
-              className="block text-text-primary hover:text-primary-gold transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Características
-            </a>
-            <a
-              href="#screenshots"
-              className="block text-text-primary hover:text-primary-gold transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Galería
-            </a>
             <Link
               href="/download"
               className="block text-text-primary hover:text-primary-gold transition-colors"

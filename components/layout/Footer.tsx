@@ -34,16 +34,6 @@ export default function Footer() {
             <h3 className="text-text-primary font-semibold mb-4">Enlaces</h3>
             <ul className="space-y-2">
               <li>
-                <a href="#features" className="text-text-secondary hover:text-primary-gold transition-colors">
-                  Características
-                </a>
-              </li>
-              <li>
-                <a href="#screenshots" className="text-text-secondary hover:text-primary-gold transition-colors">
-                  Galería
-                </a>
-              </li>
-              <li>
                 <Link href="/download" className="text-text-secondary hover:text-primary-gold transition-colors">
                   Descargar
                 </Link>
