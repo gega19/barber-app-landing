@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Button from '@/components/ui/Button';
 import { appApi, AppVersion } from '@/lib/api';
+import { analytics } from '@/lib/analytics';
 
 export default function DownloadPage() {
   const [version, setVersion] = useState<AppVersion | null>(null);
@@ -13,6 +14,8 @@ export default function DownloadPage() {
 
   useEffect(() => {
     loadActiveVersion();
+    // Track page view
+    analytics.trackPageView('/download');
   }, []);
 
   const loadActiveVersion = async () => {
@@ -35,6 +38,13 @@ export default function DownloadPage() {
     try {
       setDownloading(true);
       setError(null);
+
+      // Track download started
+      await analytics.trackDownload(version.id, {
+        version: version.version,
+        versionCode: version.versionCode,
+        apkSize: version.apkSize,
+      });
 
       console.log(`📥 Attempting to download APK for version: ${version.id} (${version.version})`);
 
@@ -60,6 +70,12 @@ export default function DownloadPage() {
       window.URL.revokeObjectURL(url);
 
       console.log(`✅ APK downloaded successfully`);
+      
+      // Track download completed
+      await analytics.trackEvent('download_completed', 'conversion', {
+        versionId: version.id,
+        version: version.version,
+      });
     } catch (err: any) {
       console.error('Error downloading APK:', err);
       let errorMessage = err.response?.data?.message || err.message || 'Error al descargar el APK';

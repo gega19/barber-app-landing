@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Card from '../ui/Card';
+import { analytics } from '@/lib/analytics';
 
 interface Screenshot {
   id: number;
@@ -53,9 +54,46 @@ const screenshots: Screenshot[] = [
 
 export default function Screenshots() {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const viewedRef = useRef(false);
+
+  useEffect(() => {
+    if (!sectionRef.current || viewedRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !viewedRef.current) {
+            viewedRef.current = true;
+            analytics.trackEvent('screenshot_section_viewed', 'engagement', {
+              section: 'screenshots',
+            });
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(sectionRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  const handleScreenshotClick = (screenshotId: number) => {
+    setSelectedImage(screenshotId);
+    const screenshot = screenshots.find((s) => s.id === screenshotId);
+    if (screenshot) {
+      analytics.trackEvent('screenshot_viewed', 'engagement', {
+        screenshotId: screenshot.id,
+        screenshotTitle: screenshot.title,
+      });
+    }
+  };
 
   return (
-    <section id="screenshots" className="py-20 bg-background-card">
+    <section ref={sectionRef} id="screenshots" className="py-20 bg-background-card">
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-16">
@@ -75,7 +113,7 @@ export default function Screenshots() {
               key={screenshot.id}
               hover
               className="cursor-pointer overflow-hidden group"
-              onClick={() => setSelectedImage(screenshot.id)}
+              onClick={() => handleScreenshotClick(screenshot.id)}
             >
               {/* Screenshot Image */}
               <div className="bg-background-card-dark rounded-lg mb-4 overflow-hidden border-2 border-border-gold group-hover:border-primary-gold transition-colors">

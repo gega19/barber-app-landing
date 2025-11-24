@@ -1,7 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import Card from '../ui/Card';
+import { analytics } from '@/lib/analytics';
 
 interface Feature {
   icon: React.ReactNode;
@@ -67,8 +68,35 @@ const features: Feature[] = [
 ];
 
 export default function Features() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const viewedRef = useRef(false);
+
+  useEffect(() => {
+    if (!sectionRef.current || viewedRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !viewedRef.current) {
+            viewedRef.current = true;
+            analytics.trackEvent('feature_viewed', 'engagement', {
+              section: 'features',
+            });
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    observer.observe(sectionRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
   return (
-    <section id="features" className="py-20 bg-background-dark">
+    <section ref={sectionRef} id="features" className="py-20 bg-background-dark">
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <div className="text-center mb-16">
