@@ -127,8 +127,13 @@ class AnalyticsService {
     }
 
     try {
+      // Asegurar que la URL tenga /api al inicio
+      const apiUrl = API_BASE_URL.endsWith('/api') 
+        ? `${API_BASE_URL}/analytics/track-batch`
+        : `${API_BASE_URL}/api/analytics/track-batch`;
+      
       await axios.post(
-        `${API_BASE_URL}/analytics/track-batch`,
+        apiUrl,
         { events: eventsToSend },
         {
           headers: { 'Content-Type': 'application/json' },
@@ -148,8 +153,13 @@ class AnalyticsService {
     window.addEventListener('beforeunload', () => {
       // Usar sendBeacon para enviar eventos de forma síncrona
       if (this.eventQueue.length > 0) {
+        // Asegurar que la URL tenga /api al inicio
+        const apiUrl = API_BASE_URL.endsWith('/api') 
+          ? `${API_BASE_URL}/analytics/track-batch`
+          : `${API_BASE_URL}/api/analytics/track-batch`;
+        
         navigator.sendBeacon(
-          `${API_BASE_URL}/analytics/track-batch`,
+          apiUrl,
           JSON.stringify({ events: this.eventQueue })
         );
       }
