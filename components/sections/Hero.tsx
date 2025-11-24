@@ -3,6 +3,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Button from '../ui/Button';
+import { analytics } from '@/lib/analytics';
 
 export default function Hero() {
   return (
@@ -62,6 +63,7 @@ export default function Hero() {
               variant="primary" 
               size="lg"
               className="w-full sm:w-auto min-w-[200px]"
+              onClick={() => analytics.trackClick('download_button_hero', { location: 'hero' })}
             >
               Descargar APK
             </Button>

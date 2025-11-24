@@ -1,6 +1,9 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { analytics } from '@/lib/analytics';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -34,7 +37,11 @@ export default function Footer() {
             <h3 className="text-text-primary font-semibold mb-4">Enlaces</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/download" className="text-text-secondary hover:text-primary-gold transition-colors">
+                <Link 
+                  href="/download" 
+                  className="text-text-secondary hover:text-primary-gold transition-colors"
+                  onClick={() => analytics.trackClick('footer_download_link')}
+                >
                   Descargar
                 </Link>
               </li>
@@ -46,17 +53,29 @@ export default function Footer() {
             <h3 className="text-text-primary font-semibold mb-4">Legal</h3>
             <ul className="space-y-2">
               <li>
-                <Link href="/privacy-policy" className="text-text-secondary hover:text-primary-gold transition-colors">
+                <Link 
+                  href="/privacy-policy" 
+                  className="text-text-secondary hover:text-primary-gold transition-colors"
+                  onClick={() => analytics.trackClick('footer_privacy_link')}
+                >
                   Política de Privacidad
                 </Link>
               </li>
               <li>
-                <Link href="/terms-of-service" className="text-text-secondary hover:text-primary-gold transition-colors">
+                <Link 
+                  href="/terms-of-service" 
+                  className="text-text-secondary hover:text-primary-gold transition-colors"
+                  onClick={() => analytics.trackClick('footer_terms_link')}
+                >
                   Términos de Servicio
                 </Link>
               </li>
               <li>
-                <Link href="/delete-account" className="text-text-secondary hover:text-primary-gold transition-colors">
+                <Link 
+                  href="/delete-account" 
+                  className="text-text-secondary hover:text-primary-gold transition-colors"
+                  onClick={() => analytics.trackClick('footer_delete_account_link')}
+                >
                   Eliminar Cuenta
                 </Link>
               </li>

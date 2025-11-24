@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Button from '../ui/Button';
+import { analytics } from '@/lib/analytics';
 
 export default function CTA() {
   return (
@@ -50,6 +51,7 @@ export default function CTA() {
               variant="primary" 
               size="lg"
               className="w-full sm:w-auto min-w-[250px] text-lg"
+              onClick={() => analytics.trackClick('download_button_cta', { location: 'cta' })}
             >
               Descargar APK Gratis
             </Button>
