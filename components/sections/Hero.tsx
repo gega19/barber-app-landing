@@ -8,7 +8,7 @@ import TopBarbersAndWorkplaces from './TopBarbersAndWorkplaces';
 
 export default function Hero() {
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[90vh] flex flex-col items-center justify-center overflow-hidden">
       {/* Background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-background-dark via-background-card to-background-dark" />
       
@@ -16,8 +16,8 @@ export default function Hero() {
       <div className="absolute top-20 left-10 w-72 h-72 bg-primary-gold/10 rounded-full blur-3xl" />
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-primary-gold/5 rounded-full blur-3xl" />
       
-      <div className="relative z-10 container mx-auto px-4 py-20">
-        <div className="max-w-4xl mx-auto text-center">
+      <div className="relative z-10 container mx-auto px-4 py-20 w-full">
+        <div className="max-w-4xl mx-auto text-center flex flex-col items-center">
           {/* Logo and App Name */}
           <div className="flex flex-col items-center mb-8">
             <div className="relative w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden mb-6 ring-4 ring-primary-gold ring-offset-4 ring-offset-background-dark shadow-2xl shadow-primary-gold/30">
