@@ -22,6 +22,36 @@ export interface AppVersion {
   updatedAt: string;
 }
 
+// Top Barbers and Workplaces interfaces
+export interface TopBarber {
+  id: string;
+  name: string;
+  email: string;
+  image?: string | null;
+  avatar?: string | null;
+  avatarSeed?: string | null;
+  rating: number;
+  specialties?: string[];
+  instagramUrl?: string | null;
+  tiktokUrl?: string | null;
+  workplaceId?: string | null;
+}
+
+export interface TopWorkplace {
+  id: string;
+  name: string;
+  address?: string | null;
+  city?: string | null;
+  image?: string | null;
+  banner?: string | null;
+  rating: number;
+  reviews: number;
+  barbersCount?: number;
+  reviewsCount?: number;
+  instagramUrl?: string | null;
+  tiktokUrl?: string | null;
+}
+
 export const appApi = {
   getActiveVersion: async (): Promise<AppVersion> => {
     const response = await api.get<{ success: boolean; data: AppVersion }>('/api/app/version');
@@ -37,6 +67,20 @@ export const appApi = {
 
   get: async (url: string) => {
     return await api.get(url);
+  },
+
+  getTopBarbers: async (limit: number = 5): Promise<TopBarber[]> => {
+    const response = await api.get<{ success: boolean; data: TopBarber[] }>(
+      `/api/barber/best?limit=${limit}`
+    );
+    return response.data.data;
+  },
+
+  getTopWorkplaces: async (limit: number = 5): Promise<TopWorkplace[]> => {
+    const response = await api.get<{ success: boolean; data: TopWorkplace[] }>(
+      `/api/workplace/public/best?limit=${limit}`
+    );
+    return response.data.data;
   },
 };
 
