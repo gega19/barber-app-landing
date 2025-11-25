@@ -71,14 +71,14 @@ export const appApi = {
 
   getTopBarbers: async (limit: number = 5): Promise<TopBarber[]> => {
     const response = await api.get<{ success: boolean; data: TopBarber[] }>(
-      `/api/barber/best?limit=${limit}`
+      `/api/barbers/best?limit=${limit}`
     );
     return response.data.data;
   },
 
   getTopWorkplaces: async (limit: number = 5): Promise<TopWorkplace[]> => {
     const response = await api.get<{ success: boolean; data: TopWorkplace[] }>(
-      `/api/workplace/public/best?limit=${limit}`
+      `/api/workplaces/public/best?limit=${limit}`
     );
     return response.data.data;
   },

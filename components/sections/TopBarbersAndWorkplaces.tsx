@@ -90,23 +90,14 @@ export default function TopBarbersAndWorkplaces() {
   return (
     <section
       ref={sectionRef}
-      className="py-20 bg-gradient-to-br from-background-dark via-background-card to-background-dark relative overflow-hidden"
+      className="py-12 bg-transparent relative overflow-hidden"
     >
       {/* Decorative elements */}
       <div className="absolute top-0 left-0 w-96 h-96 bg-primary-gold/5 rounded-full blur-3xl" />
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-primary-gold/10 rounded-full blur-3xl" />
 
       <div className="relative z-10 container mx-auto px-4">
-        {/* Section Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-text-primary mb-4">
-            Los{' '}
-            <span className="text-primary-gold">mejores profesionales</span>
-          </h2>
-          <p className="text-xl text-text-secondary max-w-2xl mx-auto">
-            Descubre a los barberos y barberías mejor calificados por nuestra comunidad
-          </p>
-        </div>
+        {/* Section Header - Removed, will be integrated in Hero */}
 
         {/* Tabs */}
         <div className="flex justify-center mb-8">

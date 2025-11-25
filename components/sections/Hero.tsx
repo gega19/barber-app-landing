@@ -4,6 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import Button from '../ui/Button';
 import { analytics } from '@/lib/analytics';
+import TopBarbersAndWorkplaces from './TopBarbersAndWorkplaces';
 
 export default function Hero() {
   return (
@@ -57,7 +58,7 @@ export default function Hero() {
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
             <Button 
               href="/download" 
               variant="primary" 
@@ -68,25 +69,13 @@ export default function Hero() {
               Descargar APK
             </Button>
           </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
-            <div className="text-center">
-              <div className="text-4xl font-bold text-primary-gold mb-2">100+</div>
-              <div className="text-text-secondary">Barberos profesionales</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-primary-gold mb-2">50+</div>
-              <div className="text-text-secondary">Barberías disponibles</div>
-            </div>
-            <div className="text-center">
-              <div className="text-4xl font-bold text-primary-gold mb-2">1000+</div>
-              <div className="text-text-secondary">Citas reservadas</div>
-            </div>
-          </div>
         </div>
       </div>
 
+      {/* Top Barbers and Workplaces Section */}
+      <div className="relative z-10 -mt-8">
+        <TopBarbersAndWorkplaces />
+      </div>
     </section>
   );
 }
