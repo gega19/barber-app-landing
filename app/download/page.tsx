@@ -10,8 +10,6 @@ export default function DownloadPage() {
   const [version, setVersion] = useState<AppVersion | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [downloading, setDownloading] = useState(false);
-
   useEffect(() => {
     loadActiveVersion();
     // Track page view
@@ -29,71 +27,6 @@ export default function DownloadPage() {
       setError(err.response?.data?.message || 'Error al cargar la información de la versión');
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleDownload = async () => {
-    if (!version) return;
-
-    try {
-      setDownloading(true);
-      setError(null);
-
-      // Track download started
-      await analytics.trackDownload(version.id, {
-        version: version.version,
-        versionCode: version.versionCode,
-        apkSize: version.apkSize,
-      });
-
-      console.log(`📥 Attempting to download APK for version: ${version.id} (${version.version})`);
-
-      // Si la URL es externa (Cloudinary), redirigir directamente
-      if (version.apkUrl && !version.apkUrl.startsWith('/uploads/')) {
-        console.log(`🔗 Redirecting to external URL: ${version.apkUrl}`);
-        window.location.href = version.apkUrl;
-        setDownloading(false);
-        return;
-      }
-
-      // Obtener el APK como blob
-      const blob = await appApi.downloadApk(version.id);
-
-      // Crear un enlace temporal para descargar
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `barber-app-v${version.version}.apk`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-
-      console.log(`✅ APK downloaded successfully`);
-
-      // Track download completed
-      await analytics.trackEvent('download_completed', 'conversion', {
-        versionId: version.id,
-        version: version.version,
-      });
-    } catch (err: any) {
-      console.error('Error downloading APK:', err);
-      let errorMessage = err.response?.data?.message || err.message || 'Error al descargar el APK';
-
-      // Si el error indica que se requiere re-subir el APK
-      if (err.response?.data?.requiresReupload) {
-        errorMessage = 'El archivo APK no está disponible. Por favor, contacta al administrador para que vuelva a subir el APK.';
-      }
-
-      console.error('Error details:', {
-        status: err.response?.status,
-        statusText: err.response?.statusText,
-        data: err.response?.data,
-        message: errorMessage,
-      });
-      setError(errorMessage);
-    } finally {
-      setDownloading(false);
     }
   };
 
@@ -223,49 +156,6 @@ export default function DownloadPage() {
                     </div>
                   </div>
                 </div>
-
-                <div className="border-t border-border-gold/20 pt-8 mt-4">
-                  <h3 className="text-center text-text-secondary text-sm mb-6 uppercase tracking-[0.2em] font-medium">¿Prefieres el APK directo?</h3>
-
-                  {/* Download Button APK */}
-                  <div className="flex flex-col items-center gap-4">
-                    <Button
-                      onClick={handleDownload}
-                      variant="secondary"
-                      size="md"
-                      disabled={downloading}
-                      className="w-full sm:w-auto min-w-[200px]"
-                    >
-                      {downloading ? (
-                        <>
-                          <span className="inline-block animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-primary-gold mr-2"></span>
-                          Descargando...
-                        </>
-                      ) : (
-                        <>
-                          <svg
-                            className="w-5 h-5 mr-2 inline-block"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                            />
-                          </svg>
-                          Descargar APK (v{version.version})
-                        </>
-                      )}
-                    </Button>
-
-                    <p className="text-xs text-text-secondary text-center max-w-md italic">
-                      Útil si no tienes acceso a Google Play en este momento.
-                    </p>
-                  </div>
-                </div>
               </>
             )}
 
@@ -276,59 +166,6 @@ export default function DownloadPage() {
                 </p>
               </div>
             )}
-          </div>
-
-          {/* Installation Instructions */}
-          <div className="mt-12 bg-background-card-dark border-2 border-border-gold rounded-2xl p-8">
-            <h2 className="text-2xl font-bold text-text-primary mb-6">
-              Instrucciones de instalación
-            </h2>
-            <ol className="space-y-4 text-text-secondary">
-              <li className="flex items-start">
-                <span className="flex-shrink-0 w-8 h-8 bg-primary-gold text-text-dark rounded-full flex items-center justify-center font-bold mr-4">
-                  1
-                </span>
-                <div>
-                  <strong className="text-text-primary">Habilita la instalación desde fuentes desconocidas:</strong>
-                  <p className="mt-1">
-                    Ve a Configuración → Seguridad → Activa "Fuentes desconocidas" o "Instalar aplicaciones desconocidas"
-                  </p>
-                </div>
-              </li>
-              <li className="flex items-start">
-                <span className="flex-shrink-0 w-8 h-8 bg-primary-gold text-text-dark rounded-full flex items-center justify-center font-bold mr-4">
-                  2
-                </span>
-                <div>
-                  <strong className="text-text-primary">Descarga el APK:</strong>
-                  <p className="mt-1">
-                    Haz clic en el botón de descarga arriba para obtener el archivo APK
-                  </p>
-                </div>
-              </li>
-              <li className="flex items-start">
-                <span className="flex-shrink-0 w-8 h-8 bg-primary-gold text-text-dark rounded-full flex items-center justify-center font-bold mr-4">
-                  3
-                </span>
-                <div>
-                  <strong className="text-text-primary">Instala la aplicación:</strong>
-                  <p className="mt-1">
-                    Abre el archivo descargado desde tu gestor de archivos y sigue las instrucciones de instalación
-                  </p>
-                </div>
-              </li>
-              <li className="flex items-start">
-                <span className="flex-shrink-0 w-8 h-8 bg-primary-gold text-text-dark rounded-full flex items-center justify-center font-bold mr-4">
-                  4
-                </span>
-                <div>
-                  <strong className="text-text-primary">¡Disfruta de bartop!</strong>
-                  <p className="mt-1">
-                    Abre la aplicación y comienza a reservar tus citas con los mejores barberos
-                  </p>
-                </div>
-              </li>
-            </ol>
           </div>
 
           {/* Back to Home */}

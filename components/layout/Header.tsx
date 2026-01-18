@@ -29,11 +29,8 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6">
-            <Link href="/download" className="text-text-primary hover:text-primary-gold transition-colors">
-              Descargar
-            </Link>
             <Button href="/download" variant="primary" size="sm">
-              Descargar APK
+              Descargar App
             </Button>
           </div>
 
@@ -64,15 +61,8 @@ export default function Header() {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className="md:hidden mt-4 pb-4 space-y-3 border-t-2 border-border-gold pt-4">
-            <Link
-              href="/download"
-              className="block text-text-primary hover:text-primary-gold transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Descargar
-            </Link>
-            <Button href="/download" variant="primary" size="sm" className="w-full">
-              Descargar APK
+            <Button href="/download" variant="primary" size="sm" className="w-full" onClick={() => setIsMenuOpen(false)}>
+              Descargar App
             </Button>
           </div>
         )}
