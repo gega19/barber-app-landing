@@ -16,7 +16,9 @@ export default function ShareRedirectPage() {
     const deepLinkPath = slugArray ? slugArray.join('/') : '';
 
     // The custom scheme URL
-    const appSchemeUrl = `bartop://${deepLinkPath}`;
+    // We add 'app' as the host so that 'barber/123' becomes the path (/barber/123)
+    // Otherwise, 'barber' is interpreted as the host and the path becomes just '/123'
+    const appSchemeUrl = `bartop://app/${deepLinkPath}`;
 
     // Store URLs (Replace with your actual store IDs)
     const androidStoreUrl = 'https://play.google.com/store/apps/details?id=com.corporacionceg.barberapp'; // Update with real ID
