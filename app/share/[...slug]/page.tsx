@@ -4,40 +4,30 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Download, ExternalLink } from 'lucide-react';
+import { analytics } from '@/lib/analytics';
 
 export default function ShareRedirectPage() {
     const params = useParams();
     const [isRedirecting, setIsRedirecting] = useState(true);
 
-    // Reconstruct the path from the slug array
-    // Example: slug=['barber', '123'] -> path='barber/123'
+    // Reconstruct path
     const slugArray = params.slug as string[];
     const deepLinkPath = slugArray ? slugArray.join('/') : '';
-
-    // The custom scheme URL
-    // We add 'app' as the host so that 'barber/123' becomes the path (/barber/123)
-    // Otherwise, 'barber' is interpreted as the host and the path becomes just '/123'
     const appSchemeUrl = `bartop://app/${deepLinkPath}`;
 
-    // Store URLs (Replace with your actual store IDs)
-    const androidStoreUrl = 'https://play.google.com/store/apps/details?id=com.corporacionceg.barberapp'; // Update with real ID
-    const iosStoreUrl = 'https://apps.apple.com/app/idYOUR_APP_ID'; // Update with real ID
+    // Store URLs from DownloadPage
+    const androidStoreUrl = 'https://play.google.com/store/apps/details?id=com.bartop.app&hl=es_VE';
 
     useEffect(() => {
+        // Track view
+        analytics.trackPageView('/share');
+
         if (!deepLinkPath) return;
 
-        // Attempt verification/redirection logic
         const tryOpenApp = () => {
-            // Create a hidden iframe to attempt opening the custom scheme
-            // distinct from window.location.href to avoid some browser warnings 
-            // or "Page not found" logic if checking response.
-
-            // Simplest modern approach:
             window.location.href = appSchemeUrl;
 
-            // Fallback logic: If the user is still here after X time, 
-            // it likely failed (app not installed).
+            // Fallback timeout
             setTimeout(() => {
                 setIsRedirecting(false);
             }, 2500);
@@ -46,66 +36,110 @@ export default function ShareRedirectPage() {
         tryOpenApp();
     }, [appSchemeUrl, deepLinkPath]);
 
-    if (!deepLinkPath) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50 text-gray-500">
-                Enlace inválido
-            </div>
-        );
-    }
-
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-white p-6 text-center font-sans">
-            <div className="max-w-md w-full space-y-8">
-                {/* App Logo */}
-                <div className="flex justify-center mb-6">
-                    <div className="w-24 h-24 bg-black rounded-3xl flex items-center justify-center shadow-xl">
-                        <span className="text-white font-bold text-3xl">B</span>
-                    </div>
-                </div>
-
-                <div className="space-y-4">
-                    <h1 className="text-2xl font-bold text-gray-900">
-                        Abrir en Bartop
-                    </h1>
-                    <p className="text-gray-600">
-                        {isRedirecting
-                            ? 'Intentando abrir la aplicación...'
-                            : 'Parece que no tienes la app instalada o no se abrió automáticamente.'}
-                    </p>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="space-y-4 pt-4">
-                    <a
-                        href={appSchemeUrl}
-                        className="block w-full py-4 bg-black text-white rounded-xl font-semibold shadow-lg hover:bg-gray-800 transition-all flex items-center justify-center gap-2"
-                    >
-                        <ExternalLink size={20} />
-                        Abrir App
-                    </a>
-
-                    {!isRedirecting && (
-                        <div className="pt-8 border-t border-gray-100 mt-8">
-                            <p className="text-sm text-gray-400 mb-4">Descárgala gratis</p>
-                            <div className="flex flex-col gap-3">
-                                <a
-                                    href={androidStoreUrl}
-                                    className="block w-full py-3 bg-white border-2 border-gray-200 text-gray-700 rounded-xl font-semibold hover:border-gray-400 hover:bg-gray-50 transition-all flex items-center justify-center gap-2"
-                                >
-                                    <Download size={20} />
-                                    Google Play
-                                </a>
-                                <a
-                                    href={iosStoreUrl}
-                                    className="block w-full py-3 bg-white border-2 border-gray-200 text-gray-700 rounded-xl font-semibold hover:border-gray-400 hover:bg-gray-50 transition-all flex items-center justify-center gap-2"
-                                >
-                                    <Download size={20} />
-                                    App Store
-                                </a>
+        <div className="min-h-screen bg-gradient-to-br from-background-dark via-background-card to-background-dark flex items-center justify-center">
+            <div className="container mx-auto px-4 py-8">
+                <div className="max-w-4xl mx-auto">
+                    {/* Header with Logo */}
+                    <div className="text-center mb-8">
+                        <div className="flex justify-center mb-6">
+                            <div className="relative w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden ring-4 ring-primary-gold ring-offset-4 ring-offset-background-dark shadow-2xl shadow-primary-gold/30">
+                                <Image
+                                    src="/images/logo.png"
+                                    alt="bartop logo"
+                                    width={128}
+                                    height={128}
+                                    className="object-cover"
+                                    priority
+                                />
                             </div>
                         </div>
-                    )}
+                        <h1 className="text-4xl md:text-5xl font-bold text-primary-gold mb-4 tracking-wide">
+                            bartop
+                        </h1>
+                        <p className="text-xl text-text-secondary mb-2">
+                            {isRedirecting ? 'Abriendo la app...' : 'Descarga la aplicación oficial'}
+                        </p>
+                        {isRedirecting && (
+                            <p className="text-sm text-text-secondary/60 animate-pulse">
+                                ¿No abre? Selecciona una opción abajo
+                            </p>
+                        )}
+                    </div>
+
+                    {/* Main Card */}
+                    <div className="bg-background-card border-2 border-border-gold rounded-2xl p-8 md:p-12 shadow-2xl">
+                        {/* Manual Open Button (if installed but blocked) */}
+                        <div className="flex justify-center mb-8">
+                            <a
+                                href={appSchemeUrl}
+                                className="bg-primary-gold text-white font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-primary-gold/50 transition-all flex items-center gap-2"
+                                onClick={() => analytics.trackClick('manual_open_app', { location: 'share_page' })}
+                            >
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                                </svg>
+                                Abrir en App
+                            </a>
+                        </div>
+
+                        <div className="relative flex py-5 items-center">
+                            <div className="flex-grow border-t border-gray-700"></div>
+                            <span className="flex-shrink-0 mx-4 text-gray-500 text-sm">O DESCÁRGALA</span>
+                            <div className="flex-grow border-t border-gray-700"></div>
+                        </div>
+
+                        {/* Store Buttons */}
+                        <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-6">
+                            {/* Google Play */}
+                            <a
+                                href={androidStoreUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="hover:scale-105 transition-transform duration-200"
+                                onClick={() => analytics.trackClick('playstore_button', { location: 'share_page' })}
+                            >
+                                <div className="bg-background-dark border border-border-gold rounded-xl px-6 py-3 flex items-center gap-4 w-[240px] shadow-lg">
+                                    <svg viewBox="0 0 24 24" className="w-8 h-8 fill-primary-gold" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.61 3,21.09 3,20.5M16.81,15.12L18.66,16.14C20.44,17.12 20.44,18.87 18.66,19.86L6.15,22.74L15.15,13.45L16.81,15.12M15.15,10.55L6.15,1.26L18.66,4.14C20.44,5.13 20.44,6.88 18.66,7.86L16.81,8.88L15.15,10.55M14.41,12L22,12C22.58,12 23.06,12.48 23.06,13.06C23.06,13.63 22.58,14.11 22,14.11L14.41,14.11V12Z" />
+                                    </svg>
+                                    <div className="flex flex-col leading-tight">
+                                        <span className="text-[10px] uppercase text-text-secondary">Disponible en</span>
+                                        <span className="text-xl font-bold text-text-primary">Google Play</span>
+                                    </div>
+                                </div>
+                            </a>
+
+                            {/* App Store (Coming Soon) */}
+                            <div className="opacity-50 grayscale flex items-center justify-center">
+                                <div className="bg-background-dark/50 border border-border-gold/30 rounded-xl px-6 py-3 flex items-center gap-4 w-[240px] relative overflow-hidden">
+                                    <svg viewBox="0 0 24 24" className="w-8 h-8 fill-primary-gold" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M18.71,19.5C17.88,20.74 17,21.95 15.66,21.97C14.32,22 13.89,21.18 12.37,21.18C10.84,21.18 10.37,21.95 9.1,21.97C7.81,22 6.85,20.65 6,19.45C4.35,17 3.09,12.4 4.84,9.39C5.71,7.9 7.23,6.95 8.9,6.93C10.17,6.9 11.36,7.79 12.15,7.79C12.93,7.79 14.38,6.73 15.92,6.89C16.56,6.92 18.36,7.15 19.5,8.82C19.42,8.87 17.31,10.1 17.35,12.6C17.39,15.54 19.86,16.5 19.9,16.5C19.88,16.56 19.5,17.9 18.71,19.5M15.8,3.56C16.47,2.75 16.93,1.6 16.8,0.45C15.82,0.49 14.63,1.1 13.93,1.91C13.31,2.63 12.77,3.8 12.92,5.01C14,5.09 15.13,4.4 15.8,3.56Z" />
+                                    </svg>
+                                    <div className="flex flex-col leading-tight">
+                                        <span className="text-[10px] uppercase text-text-secondary">App Store</span>
+                                        <span className="text-xl font-bold text-text-primary">Próximamente</span>
+                                    </div>
+                                    <div className="absolute top-1 right-2 rotate-12">
+                                        <span className="text-[8px] bg-primary-gold text-text-dark px-1 font-black rounded uppercase">iOS</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Back to Home */}
+                    <div className="mt-8 text-center">
+                        <Link
+                            href="/"
+                            className="text-primary-gold hover:text-primary-gold-dark transition-colors inline-flex items-center gap-2"
+                        >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                            </svg>
+                            Volver al inicio
+                        </Link>
+                    </div>
                 </div>
             </div>
         </div>
