@@ -41,6 +41,14 @@ export default function BookingPage() {
     useEffect(() => {
         loadData();
         analytics.trackPageView(`/booking/${barberId}`);
+
+        // Auto-redirect to app on mobile devices
+        if (isMobileDevice()) {
+            const redirectTimer = setTimeout(() => {
+                handleOpenInApp();
+            }, 1500); // Give it a moment to load
+            return () => clearTimeout(redirectTimer);
+        }
     }, [barberId]);
 
     const loadData = async () => {
@@ -93,7 +101,7 @@ export default function BookingPage() {
     };
 
     const handleOpenInApp = () => {
-        const appUrl = `bartop://booking/${barberId}`;
+        const appUrl = `bartop://app/booking/${barberId}`;
         window.location.href = appUrl;
     };
 

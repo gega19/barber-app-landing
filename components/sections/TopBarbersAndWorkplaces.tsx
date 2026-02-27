@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { appApi, TopBarber, TopWorkplace } from '@/lib/api';
 import { analytics } from '@/lib/analytics';
 import BarberCard from '../cards/BarberCard';
@@ -10,6 +11,7 @@ import Carousel from '../ui/Carousel';
 type TabType = 'barbers' | 'workplaces';
 
 export default function TopBarbersAndWorkplaces() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>('barbers');
   const [barbers, setBarbers] = useState<TopBarber[]>([]);
   const [workplaces, setWorkplaces] = useState<TopWorkplace[]>([]);
@@ -75,7 +77,15 @@ export default function TopBarbersAndWorkplaces() {
       id,
       section: 'top_barbers_workplaces',
     });
-    // Aquí podrías redirigir a la app o mostrar más detalles
+
+    if (type === 'barber') {
+      router.push(`/booking/${id}`);
+    } else {
+      // For now workplaces also go to booking if they have a primary barber or similar
+      // or we can implement a workplace detail page. 
+      // User specifically asked for "link de citas para agendar".
+      router.push(`/booking/${id}`);
+    }
   };
 
   // Skeleton loader
