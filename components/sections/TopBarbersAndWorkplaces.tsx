@@ -15,12 +15,12 @@ export default function TopBarbersAndWorkplaces() {
   const [workplaces, setWorkplaces] = useState<TopWorkplace[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const sectionRef = useRef<HTMLElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
   const viewedRef = useRef(false);
 
   useEffect(() => {
     loadData();
-    
+
     // Track section view
     if (!sectionRef.current || viewedRef.current) return;
 
@@ -49,12 +49,12 @@ export default function TopBarbersAndWorkplaces() {
     try {
       setLoading(true);
       setError(null);
-      
+
       const [barbersData, workplacesData] = await Promise.all([
         appApi.getTopBarbers(5),
         appApi.getTopWorkplaces(5),
       ]);
-      
+
       setBarbers(barbersData);
       setWorkplaces(workplacesData);
     } catch (err: any) {
@@ -88,37 +88,35 @@ export default function TopBarbersAndWorkplaces() {
   );
 
   return (
-    <section
+    <div
       ref={sectionRef}
-      className="py-12 bg-transparent relative overflow-hidden"
+      className="py-12 relative w-full"
     >
       {/* Decorative elements */}
       <div className="absolute top-0 left-0 w-96 h-96 bg-primary-gold/5 rounded-full blur-3xl" />
       <div className="absolute bottom-0 right-0 w-96 h-96 bg-primary-gold/10 rounded-full blur-3xl" />
 
-      <div className="relative z-10 container mx-auto px-4">
+      <div className="relative z-10 w-full max-w-7xl mx-auto px-4">
         {/* Section Header - Removed, will be integrated in Hero */}
 
         {/* Tabs */}
-        <div className="flex justify-center mb-8">
-          <div className="inline-flex bg-background-card rounded-xl p-1 border-2 border-border-gold">
+        <div className="flex justify-center mb-6">
+          <div className="inline-flex bg-background-card/50 backdrop-blur-sm rounded-xl p-1 border border-border-gold/30">
             <button
               onClick={() => handleTabChange('barbers')}
-              className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${
-                activeTab === 'barbers'
-                  ? 'bg-primary-gold text-text-dark shadow-lg'
-                  : 'text-text-secondary hover:text-text-primary'
-              }`}
+              className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${activeTab === 'barbers'
+                ? 'bg-primary-gold text-text-dark shadow-lg'
+                : 'text-text-secondary hover:text-text-primary'
+                }`}
             >
               Barberos
             </button>
             <button
               onClick={() => handleTabChange('workplaces')}
-              className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${
-                activeTab === 'workplaces'
-                  ? 'bg-primary-gold text-text-dark shadow-lg'
-                  : 'text-text-secondary hover:text-text-primary'
-              }`}
+              className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 ${activeTab === 'workplaces'
+                ? 'bg-primary-gold text-text-dark shadow-lg'
+                : 'text-text-secondary hover:text-text-primary'
+                }`}
             >
               Barberías
             </button>
@@ -143,14 +141,14 @@ export default function TopBarbersAndWorkplaces() {
             </button>
           </div>
         ) : (
-          <div className="min-h-[400px]">
+          <div className="w-full">
             {activeTab === 'barbers' ? (
               barbers.length > 0 ? (
                 <Carousel>
                   {barbers.map((barber) => (
                     <div
                       key={barber.id}
-                      className="flex-shrink-0 w-[280px] sm:w-80 snap-start"
+                      className="flex-shrink-0 w-[260px] sm:w-80 snap-center"
                     >
                       <BarberCard
                         barber={barber}
@@ -170,7 +168,7 @@ export default function TopBarbersAndWorkplaces() {
                   {workplaces.map((workplace) => (
                     <div
                       key={workplace.id}
-                      className="flex-shrink-0 w-[280px] sm:w-80 snap-start"
+                      className="flex-shrink-0 w-[260px] sm:w-80 snap-center"
                     >
                       <WorkplaceCard
                         workplace={workplace}
@@ -190,7 +188,7 @@ export default function TopBarbersAndWorkplaces() {
           </div>
         )}
       </div>
-    </section>
+    </div>
   );
 }
 

@@ -16,7 +16,7 @@ export default function Hero() {
       <div className="absolute top-20 left-10 w-72 h-72 bg-primary-gold/10 rounded-full blur-3xl" />
       <div className="absolute bottom-20 right-10 w-96 h-96 bg-primary-gold/5 rounded-full blur-3xl" />
 
-      <div className="relative z-10 container mx-auto px-4 py-20 w-full">
+      <div className="relative z-10 container mx-auto px-4 py-10 md:py-20 w-full">
         <div className="max-w-4xl mx-auto text-center flex flex-col items-center">
           {/* Logo and App Name */}
           <div className="flex flex-col items-center mb-8">
@@ -46,7 +46,7 @@ export default function Hero() {
           </div>
 
           {/* Main heading */}
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-text-primary via-primary-gold to-text-primary bg-clip-text text-transparent">
+          <h1 className="text-4xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-text-primary via-primary-gold to-text-primary bg-clip-text text-transparent px-2">
             Reserva tu cita con los{' '}
             <span className="text-primary-gold">mejores barberos</span>
           </h1>
@@ -58,7 +58,7 @@ export default function Hero() {
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 px-4 w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8 md:mb-16 px-4 w-full sm:w-auto">
             <Button
               href="https://play.google.com/store/apps/details?id=com.bartop.app&hl=es_VE"
               variant="primary"
@@ -93,10 +93,6 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Top Barbers and Workplaces Section */}
-      <div className="relative z-10 -mt-8">
-        <TopBarbersAndWorkplaces />
-      </div>
     </section>
   );
 }

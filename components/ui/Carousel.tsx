@@ -49,7 +49,7 @@ export default function Carousel({
       direction === 'left'
         ? container.scrollLeft - scrollAmount
         : container.scrollLeft + scrollAmount;
-    
+
     container.scrollTo({
       left: targetScroll,
       behavior: 'smooth',
@@ -57,26 +57,16 @@ export default function Carousel({
   };
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative w-full ${className}`}>
       {/* Left Arrow */}
       {showArrows && canScrollLeft && (
         <button
           onClick={() => scroll('left')}
-          className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-background-card/90 backdrop-blur-sm border-2 border-primary-gold rounded-full flex items-center justify-center text-primary-gold hover:bg-primary-gold hover:text-text-dark transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-110"
+          className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-background-card/90 backdrop-blur-sm border-2 border-primary-gold rounded-full items-center justify-center text-primary-gold hover:bg-primary-gold hover:text-text-dark transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-110"
           aria-label="Scroll left"
         >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M15 19l-7-7 7-7"
-            />
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </button>
       )}
@@ -84,13 +74,9 @@ export default function Carousel({
       {/* Scroll Container */}
       <div
         ref={scrollContainerRef}
-        className="overflow-x-auto scrollbar-hide scroll-smooth snap-x snap-mandatory"
-        style={{
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
-        }}
+        className="overflow-x-auto scrollbar-hide scroll-smooth snap-x snap-proximity"
       >
-        <div className="flex gap-6 px-2">
+        <div className="flex gap-4 md:gap-6 px-4 md:px-2">
           {children}
         </div>
       </div>
@@ -99,31 +85,14 @@ export default function Carousel({
       {showArrows && canScrollRight && (
         <button
           onClick={() => scroll('right')}
-          className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-background-card/90 backdrop-blur-sm border-2 border-primary-gold rounded-full flex items-center justify-center text-primary-gold hover:bg-primary-gold hover:text-text-dark transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-110"
+          className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-background-card/90 backdrop-blur-sm border-2 border-primary-gold rounded-full items-center justify-center text-primary-gold hover:bg-primary-gold hover:text-text-dark transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-110"
           aria-label="Scroll right"
         >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 5l7 7-7 7"
-            />
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </button>
       )}
-
-      <style jsx>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
     </div>
   );
 }
-

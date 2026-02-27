@@ -10,7 +10,12 @@ import ServiceSelector from '@/components/booking/ServiceSelector';
 import AvailabilitySelector from '@/components/booking/AvailabilitySelector';
 import GuestForm from '@/components/booking/GuestForm';
 import PaymentMethodSelector from '@/components/booking/PaymentMethodSelector';
-import { ChevronLeft, ChevronRight, Calendar, User, ShoppingBag, CheckCircle2, CreditCard } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calendar, User, ShoppingBag, CheckCircle2, CreditCard, Smartphone, Globe } from 'lucide-react';
+
+const isMobileDevice = () => {
+    if (typeof window === 'undefined') return false;
+    return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+};
 
 export default function BookingPage() {
     const params = useParams();
@@ -85,6 +90,11 @@ export default function BookingPage() {
     const handleBack = () => {
         setStep(prev => prev - 1);
         window.scrollTo(0, 0);
+    };
+
+    const handleOpenInApp = () => {
+        const appUrl = `bartop://booking/${barberId}`;
+        window.location.href = appUrl;
     };
 
     const handleConfirm = async () => {
@@ -188,13 +198,27 @@ export default function BookingPage() {
                             </div>
 
                             <div className="space-y-6">
-                                <button
-                                    onClick={() => setStep(1)}
-                                    className="relative group w-full py-6 bg-gradient-to-br from-primary-gold-bright via-primary-gold to-primary-gold-muted text-text-dark font-black rounded-[1.5rem] shadow-[0_10px_40px_rgba(212,175,55,0.3)] hover:shadow-[0_15px_60px_rgba(212,175,55,0.45)] transition-all duration-500 text-xl overflow-hidden active:scale-95"
-                                >
-                                    <span className="relative z-10">Continuar como invitado</span>
-                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:animate-[shine_1.5s_infinite] skew-x-[-20deg]" />
-                                </button>
+                                <div className="space-y-4">
+                                    {isMobileDevice() && (
+                                        <button
+                                            onClick={handleOpenInApp}
+                                            className="relative group w-full py-6 bg-gradient-to-br from-primary-gold-bright via-primary-gold to-primary-gold-muted text-text-dark font-black rounded-[1.5rem] shadow-[0_10px_40px_rgba(212,175,55,0.3)] hover:shadow-[0_15px_60px_rgba(212,175,55,0.45)] transition-all duration-500 text-xl overflow-hidden active:scale-95 flex items-center justify-center gap-3"
+                                        >
+                                            <Smartphone className="w-6 h-6" />
+                                            <span className="relative z-10">Abrir en la App</span>
+                                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:animate-[shine_1.5s_infinite] skew-x-[-20deg]" />
+                                        </button>
+                                    )}
+
+                                    <button
+                                        onClick={() => setStep(1)}
+                                        className={`relative group w-full py-5 ${isMobileDevice() ? 'bg-background-dark/50 border border-primary-gold/30 text-text-primary' : 'bg-gradient-to-br from-primary-gold-bright via-primary-gold to-primary-gold-muted text-text-dark'} font-black rounded-[1.5rem] shadow-xl hover:shadow-2xl transition-all duration-500 text-lg overflow-hidden active:scale-95 flex items-center justify-center gap-3`}
+                                    >
+                                        {!isMobileDevice() ? <Smartphone className="w-5 h-5" /> : <Globe className="w-5 h-5" />}
+                                        <span className="relative z-10">{isMobileDevice() ? 'Continuar en la Web' : 'Continuar como invitado'}</span>
+                                        {!isMobileDevice() && <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:animate-[shine_1.5s_infinite] skew-x-[-20deg]" />}
+                                    </button>
+                                </div>
 
                                 <div className="p-8 bg-primary-gold/5 rounded-[2.5rem] border border-primary-gold/20 flex flex-col items-center gap-6 mt-12">
                                     <div className="flex flex-col items-center gap-3 text-center">

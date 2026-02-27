@@ -105,13 +105,13 @@ export default function Features() {
             <span className="text-primary-gold">un solo lugar</span>
           </h2>
           <p className="text-xl text-text-secondary max-w-2xl mx-auto">
-            Descubre todas las funcionalidades que hacen de Barber App la mejor opción 
+            Descubre todas las funcionalidades que hacen de Barber App la mejor opción
             para gestionar tus citas de barbería.
           </p>
         </div>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {features.map((feature, index) => (
             <Card key={index} hover className="text-center">
               <div className="text-primary-gold mb-4 flex justify-center">

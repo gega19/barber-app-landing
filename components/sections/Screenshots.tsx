@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Card from '../ui/Card';
+import Carousel from '../ui/Carousel';
 import { analytics } from '@/lib/analytics';
 
 interface Screenshot {
@@ -106,94 +107,88 @@ export default function Screenshots() {
           </p>
         </div>
 
-        {/* Screenshots Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <Carousel showArrows={true} showDots={false} className="pb-8">
           {screenshots.map((screenshot) => (
-            <Card
-              key={screenshot.id}
-              hover
-              className="cursor-pointer overflow-hidden group"
-              onClick={() => handleScreenshotClick(screenshot.id)}
-            >
-              {/* Screenshot Image */}
-              <div className="bg-background-card-dark rounded-lg mb-4 overflow-hidden border-2 border-border-gold group-hover:border-primary-gold transition-colors">
-                <div className="relative w-full" style={{ aspectRatio: '9/16', minHeight: '300px' }}>
-                  <Image
-                    src={screenshot.image}
-                    alt={screenshot.title}
-                    fill
-                    className="object-contain p-3"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    quality={90}
-                    priority={screenshot.id <= 3}
-                  />
-                </div>
-              </div>
-              <h3 className="text-lg font-semibold text-text-primary mb-2">
-                {screenshot.title}
-              </h3>
-              <p className="text-text-secondary text-sm">
-                {screenshot.description}
-              </p>
-            </Card>
-          ))}
-        </div>
-
-        {/* Lightbox Modal */}
-        {selectedImage && (
-          <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
-            onClick={() => setSelectedImage(null)}
-          >
-            <div className="relative max-w-4xl w-full">
-              <button
-                className="absolute top-4 right-4 text-text-primary hover:text-primary-gold transition-colors z-10"
-                onClick={() => setSelectedImage(null)}
-                aria-label="Cerrar"
+            <div key={screenshot.id} className="flex-shrink-0 w-[260px] sm:w-[280px] snap-center">
+              <Card
+                hover
+                className="cursor-pointer overflow-hidden group h-full"
+                onClick={() => handleScreenshotClick(screenshot.id)}
               >
-                <svg
-                  className="w-8 h-8"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
-              <div className="bg-background-card rounded-lg p-4 border-2 border-border-gold max-w-sm mx-auto">
-                <div className="relative bg-background-card-dark rounded-lg overflow-hidden" style={{ aspectRatio: '9/16', width: '100%', maxHeight: '80vh' }}>
-                  {selectedImage && (
+                {/* Screenshot Image */}
+                <div className="bg-background-card-dark rounded-lg mb-4 overflow-hidden border-2 border-border-gold group-hover:border-primary-gold transition-colors">
+                  <div className="relative w-full" style={{ aspectRatio: '9/16' }}>
                     <Image
-                      src={screenshots.find((s) => s.id === selectedImage)?.image || ''}
-                      alt={screenshots.find((s) => s.id === selectedImage)?.title || ''}
+                      src={screenshot.image}
+                      alt={screenshot.title}
                       fill
-                      className="object-contain p-4"
-                      sizes="(max-width: 1024px) 100vw, 400px"
-                      quality={95}
+                      className="object-contain p-2"
+                      sizes="(max-width: 768px) 100vw, 300px"
+                      quality={90}
                     />
-                  )}
-                </div>
-                {selectedImage && (
-                  <div className="mt-4 text-center">
-                    <h3 className="text-lg font-semibold text-text-primary mb-1">
-                      {screenshots.find((s) => s.id === selectedImage)?.title}
-                    </h3>
-                    <p className="text-sm text-text-secondary">
-                      {screenshots.find((s) => s.id === selectedImage)?.description}
-                    </p>
                   </div>
-                )}
+                </div>
+                <h3 className="text-lg font-semibold text-text-primary mb-2">
+                  {screenshot.title}
+                </h3>
+                <p className="text-text-secondary text-sm">
+                  {screenshot.description}
+                </p>
+              </Card>
+            </div>
+          ))}
+        </Carousel>
+      </div>
+
+      {/* Lightbox Modal */}
+      {selectedImage && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+          onClick={() => setSelectedImage(null)}
+        >
+          <div className="relative max-w-4xl w-full">
+            <button
+              className="absolute top-4 right-4 text-text-primary hover:text-primary-gold transition-colors z-10"
+              onClick={() => setSelectedImage(null)}
+              aria-label="Cerrar"
+            >
+              <svg
+                className="w-8 h-8"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+            <div className="bg-background-card rounded-lg p-4 border-2 border-border-gold max-w-sm mx-auto">
+              <div className="relative bg-background-card-dark rounded-lg overflow-hidden" style={{ aspectRatio: '9/16', width: '100%', maxHeight: '80vh' }}>
+                <Image
+                  src={screenshots.find((s) => s.id === selectedImage)?.image || ''}
+                  alt={screenshots.find((s) => s.id === selectedImage)?.title || ''}
+                  fill
+                  className="object-contain p-4"
+                  sizes="(max-width: 1024px) 100vw, 400px"
+                  quality={95}
+                />
+              </div>
+              <div className="mt-4 text-center">
+                <h3 className="text-lg font-semibold text-text-primary mb-1">
+                  {screenshots.find((s) => s.id === selectedImage)?.title}
+                </h3>
+                <p className="text-sm text-text-secondary">
+                  {screenshots.find((s) => s.id === selectedImage)?.description}
+                </p>
               </div>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </section>
   );
 }
-
