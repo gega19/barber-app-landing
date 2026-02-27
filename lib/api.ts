@@ -52,14 +52,41 @@ export interface TopWorkplace {
   tiktokUrl?: string | null;
 }
 
+export interface Service {
+  id: string;
+  name: string;
+  price: number;
+  description?: string | null;
+}
+
+export interface AvailableSlots {
+  date: string;
+  availableSlots: string[];
+}
+
+export interface Appointment {
+  id: string;
+  barberId: string;
+  serviceId?: string;
+  date: string;
+  time: string;
+  status: string;
+}
+
+export interface PaymentMethod {
+  id: string;
+  name: string;
+  type?: string | null;
+}
+
 export const appApi = {
   getActiveVersion: async (): Promise<AppVersion> => {
-    const response = await api.get<{ success: boolean; data: AppVersion }>('/api/app/version');
+    const response = await api.get<{ success: boolean; data: AppVersion }>('/app/version');
     return response.data.data;
   },
-  
+
   downloadApk: async (versionId: string): Promise<Blob> => {
-    const response = await api.get(`/api/app/download/${versionId}`, {
+    const response = await api.get(`/app/download/${versionId}`, {
       responseType: 'blob',
     });
     return response.data;
@@ -71,14 +98,56 @@ export const appApi = {
 
   getTopBarbers: async (limit: number = 5): Promise<TopBarber[]> => {
     const response = await api.get<{ success: boolean; data: TopBarber[] }>(
-      `/api/barbers/best?limit=${limit}`
+      `/barbers/best?limit=${limit}`
     );
     return response.data.data;
   },
 
   getTopWorkplaces: async (limit: number = 5): Promise<TopWorkplace[]> => {
     const response = await api.get<{ success: boolean; data: TopWorkplace[] }>(
-      `/api/workplaces/public/best?limit=${limit}`
+      `/workplaces/public/best?limit=${limit}`
+    );
+    return response.data.data;
+  },
+
+  getBarberById: async (id: string): Promise<TopBarber> => {
+    const response = await api.get<{ success: boolean; data: TopBarber }>(`/barbers/${id}`);
+    return response.data.data;
+  },
+
+  getBarberServices: async (barberId: string): Promise<Service[]> => {
+    const response = await api.get<{ success: boolean; data: Service[] }>(
+      `/services/barber/${barberId}`
+    );
+    return response.data.data;
+  },
+
+  getAvailableSlots: async (barberId: string, date: string): Promise<string[]> => {
+    const response = await api.get<{ success: boolean; data: AvailableSlots }>(
+      `/barber-availability/${barberId}/slots?date=${date}`
+    );
+    return response.data.data.availableSlots;
+  },
+
+  getPaymentMethods: async (): Promise<PaymentMethod[]> => {
+    const response = await api.get<{ success: boolean; data: PaymentMethod[] }>(
+      '/payment-methods'
+    );
+    return response.data.data;
+  },
+
+  createAppointment: async (data: {
+    barberId: string;
+    serviceId?: string;
+    date: string;
+    time: string;
+    paymentMethod: string;
+    clientName: string;
+    clientPhone: string;
+  }): Promise<Appointment> => {
+    const response = await api.post<{ success: boolean; data: Appointment }>(
+      '/appointments',
+      data
     );
     return response.data.data;
   },
