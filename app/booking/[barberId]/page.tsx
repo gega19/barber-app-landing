@@ -166,7 +166,7 @@ export default function BookingPage() {
                     <div className="flex items-center gap-4 mb-8 bg-background-card/30 p-4 rounded-2xl border border-border-gold/20 backdrop-blur-md animate-in fade-in slide-in-from-top-4 duration-500">
                         <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-primary-gold">
                             <Image
-                                src={barber.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(barber.name)}&background=C9A961&color=0F0F0F`}
+                                src={barber.avatar || barber.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(barber.name)}&background=C9A961&color=0F0F0F`}
                                 alt={barber.name}
                                 fill
                                 className="object-cover"
@@ -191,7 +191,7 @@ export default function BookingPage() {
                             <div className="flex flex-col items-center mb-12">
                                 <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-primary-gold shadow-[0_0_40px_rgba(212,175,55,0.25)] mb-6 ring-8 ring-primary-gold/5">
                                     <Image
-                                        src={barber.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(barber.name)}&background=C9A961&color=0F0F0F`}
+                                        src={barber.avatar || barber.image || `https://ui-avatars.com/api/?name=${encodeURIComponent(barber.name)}&background=C9A961&color=0F0F0F`}
                                         alt={barber.name}
                                         fill
                                         className="object-cover"
