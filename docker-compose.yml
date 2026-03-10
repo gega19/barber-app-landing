@@ -1,0 +1,14 @@
+services:
+  landing:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # Cambia la URL según tu backend (build-time para NEXT_PUBLIC_*)
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://barber-api.corporacionceg.com/api}
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    restart: unless-stopped

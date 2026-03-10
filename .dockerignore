@@ -1,0 +1,69 @@
+# Dependencies
+node_modules
+.pnp
+.pnp.js
+.yarn/install-state.gz
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/patches
+.yarn/versions
+
+# Build output
+.next
+out
+build
+dist
+
+# Testing
+coverage
+.nyc_output
+*.test.js
+*.test.ts
+*.test.tsx
+__tests__
+__mocks__
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# IDE & OS
+.DS_Store
+*.pem
+.idea
+.vscode
+*.swp
+*.swo
+
+# Logs y debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Environment (se pasan como build args o en docker-compose)
+.env
+.env*.local
+.env.development
+.env.production
+.env.test
+
+# Documentación y misc
+README.md
+*.md
+RENDER_DEPLOYMENT.md
+FIX_STYLES.md
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Vercel
+.vercel
+
+# Docker (evitar contexto recursivo)
+Dockerfile*
+docker-compose*
+.dockerignore
