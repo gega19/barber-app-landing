@@ -1,6 +1,16 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://barber-api.corporacionceg.com/api';
+const rawApiBaseUrl =
+  process.env.NEXT_PUBLIC_API_URL || 'https://barber-api.corporacionceg.com/api';
+
+const normalizeApiBaseUrl = (url: string): string => {
+  const withoutTrailingSlash = url.replace(/\/+$/, '');
+  return withoutTrailingSlash.endsWith('/api')
+    ? withoutTrailingSlash
+    : `${withoutTrailingSlash}/api`;
+};
+
+const API_BASE_URL = normalizeApiBaseUrl(rawApiBaseUrl);
 
 export const api = axios.create({
   baseURL: API_BASE_URL,

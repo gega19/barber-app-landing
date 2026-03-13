@@ -25,7 +25,7 @@ export default function TermsOfServicePage() {
     try {
       setIsLoading(true);
       setError(null);
-      const response = await appApi.get('/api/legal/terms');
+      const response = await appApi.get('/legal/terms');
       setDocument(response.data.data);
     } catch (err: any) {
       console.error('Error loading terms of service:', err);
